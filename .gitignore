@@ -47,4 +47,5 @@ Temporary Items
 .apdisk
 
 # Directories with data files too large for github or irrelevant to project
+common/*
 /common/*
