@@ -6,16 +6,40 @@ function [f,g] = logistic_regression_vec(theta, X,y)
   %       X(i,j) is the i'th coordinate of the j'th example.
   %   y - The label for each example.  y(j) is the j'th example's label.
   %
-  m=size(X,2);
+  n = size(X,1);
+  m = size(X,2);
   
   % initialize objective value and gradient.
   f = 0;
   g = zeros(size(theta));
-  
 
   %
-  % TODO:  Compute the logistic regression objective function and gradient 
-  %        using vectorized code.  (It will be just a few lines of code!)
-  %        Store the objective function value in 'f', and the gradient in 'g'.
+  % TODO:  Compute the objective function by looping over the dataset and summing
+  %        up the objective values for each example.  Store the result in 'f'.
   %
-%%% YOUR CODE HERE %%%
+  % TODO:  Compute the gradient of the objective by looping over the dataset and summing
+  %        up the gradients (df/dtheta) for each example. Store the result in 'g'.
+  %
+  %%% Compute the objective/cost function %%%
+  % Iterate over every column vector in train.X to 
+  
+  z = theta'*X;
+  sigmoid = (1 ./ (1 + exp(-z)));
+  f = (y*log(sigmoid)') + ((1-y)*log(1-sigmoid)');
+  g = X*(sigmoid - y)';
+  f = -f;
+%   z = theta'*X;
+%   sigmoid = (1 ./ (1 + exp(-z)));
+%   f = sum(y.*log(sigmoid) + (1-y).*log(1-sigmoid));
+%   g = X*(sigmoid - y)';
+  
+%   for i = 1:m
+%       g = g + X(:,i) * (sigmoid(i) - y(i));
+%   end
+  
+%   for i = 1:m
+%       estimate = y(i)*log(sigmoid(i)) + (1-y(i))*log(1-sigmoid(i));
+%       f = f + estimate;
+%       g = g + X(:,i) * (sigmoid(i) - y(i));
+%   end
+  
