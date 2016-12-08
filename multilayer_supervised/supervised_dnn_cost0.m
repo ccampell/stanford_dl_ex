@@ -1,4 +1,4 @@
-function [ cost, grad, pred_prob] = supervised_dnn_cost(theta, ei, data, labels, pred_only)
+function [ cost, grad, pred_prob] = supervised_dnn_cost0(theta, ei, data, labels, pred_only)
 %SPNETCOSTSLAVE Slave cost function for simple phone net
 %   Does all the work of cost / gradient computation
 %   Returns cost broken into cross-entropy, weight norm, and prox reg
@@ -56,6 +56,18 @@ linearIndex = sub2ind([size(Y,1), size(Y,2)], labels', 1:size(Y,2));
 Y(linearIndex) = 1;
 %% compute cost (chris)
 % Compute the sum of the squared error between hypothesis - actual.
+class_labels = 1:10;
+for sample = 1:num_samples
+    for class_label = 1:class_labels
+        % If the column with a 1 in it is the same as the current class
+        % label; then trigger the activation function. 
+        if Y(:,sample)
+            
+        end
+        print(class_label)
+    end
+    h_wxi = a{3}(:,sample)
+end
 sum_sqr_err = 0;
 for sample = 1:num_samples
     h_wxi = a{3}(:,sample);

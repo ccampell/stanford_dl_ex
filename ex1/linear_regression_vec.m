@@ -6,7 +6,7 @@ function [f,g] = linear_regression_vec(theta, X, y)
   %       X(i,j) is the i'th coordinate of the j'th example.
   %   y - The target value for each example.  y(j) is the target for example j.
   %
-  m=size(X,2);
+  m = size(X,2);
   
   % initialize objective value and gradient.
   f = 0;

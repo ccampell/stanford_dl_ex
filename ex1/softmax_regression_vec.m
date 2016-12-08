@@ -1,4 +1,4 @@
-function [f,g] = softmax_regression(theta, X,y)
+function [f,g] = softmax_regression_vec(theta, X,y)
   %
   % Arguments:
   %   theta - A vector containing the parameter values to optimize.
@@ -26,7 +26,39 @@ function [f,g] = softmax_regression(theta, X,y)
   %        Store the objective function value in 'f', and the gradient in 'g'.
   %        Before returning g, make sure you form it back into a vector with g=g(:);
   %
-%%% YOUR CODE HERE %%%
+  g = [g, zeros(n,1)];
+  % Append a column of zeros to theta to garantee a unique solution. 
+  theta = [theta, zeros(n,1)];
+  % numerator = exp(theta(:,k)'*X(:,i));
+  % Vectorized Denominator is a (K by M) matrix.
+  inner_product = exp(theta'*X);
+  % Take the sum of every column of inner_product; resulting in
+  %     a (1 by M) summation vector. 
+  sum_vec = sum(inner_product,1);
+  % Divide the numerator by the denominator (K by M) / (1 x M). 
+  h = bsxfun(@rdivide, inner_product, sum_vec);
+  % h is a (K by M) matrix. 
+  log_h = log(h);
+  % Sum along the rows of log_h where the row_index == y.
+  % We don't care about how good the predictor is for the wrong class; we
+  % only care about when k == y.
+  % Vectorization 1 of f:
+  %   for i = 1:m
+  %       f = f + log_h(y(i),i);
+  %   end
+  %   f = -f;
+  % Vectorization 2 of f:
+  I = sub2Ind(size(log_h),1:size(log_h,1),1:size(M));
   
+  % Compute the gradient:
+  for i = 1:m
+      indicator = zeros(num_classes,1);
+      indicator(y(i)) = 1;
+      g = g + X(:,i)*(indicator - h(:,i))';
+      %temp = temp(:,1:end-1);
+      %g = g + temp;
+  end
+  g = -g;
+  g = g(:,1:end-1);
   g=g(:); % make gradient a vector for minFunc
 

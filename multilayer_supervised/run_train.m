@@ -2,6 +2,9 @@
 % softmax output layer with cross entropy loss function
 
 %% setup environment
+% ======================= (chris) ========================
+% Seed the random number generator for reproducability:
+% rng(1)
 % experiment information
 % a struct containing network layer sizes etc
 ei = [];
@@ -41,18 +44,25 @@ options = [];
 options.display = 'iter';
 options.maxFunEvals = 1e6;
 options.Method = 'lbfgs';
-
+%% run gradient check (chris)
+theta0 = params;
+num_checks = 10;
+pred_only = false;
+var_arg_in = {ei, data_train, labels_train, pred_only};
+[ cost, grad, pred_prob] = supervised_dnn_cost0(theta0, ei, data_train, labels_train, pred_only);
+avg_err = grad_check(@supervised_dnn_cost0, theta0, num_checks, ei, data_train, labels_train)
+% fprintf('avg_err: %f\n', avg_err)
+% return
 %% run training
-[opt_params,opt_value,exitflag,output] = minFunc(@supervised_dnn_cost,...
+[opt_params,opt_value,exitflag,output] = minFunc(@supervised_dnn_cost0,...
     params,options,ei, data_train, labels_train);
-
 %% compute accuracy on the test and train set
-[~, ~, pred] = supervised_dnn_cost( opt_params, ei, data_test, [], true);
+[~, ~, pred] = supervised_dnn_cost0( opt_params, ei, data_test, [], true);
 [~,pred] = max(pred);
 acc_test = mean(pred'==labels_test);
 fprintf('test accuracy: %f\n', acc_test);
 
-[~, ~, pred] = supervised_dnn_cost( opt_params, ei, data_train, [], true);
+[~, ~, pred] = supervised_dnn_cost0( opt_params, ei, data_train, [], true);
 [~,pred] = max(pred);
 acc_train = mean(pred'==labels_train);
 fprintf('train accuracy: %f\n', acc_train);
